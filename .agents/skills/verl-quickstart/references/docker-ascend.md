@@ -1,5 +1,9 @@
 # Docker / Ascend（参考）
 
+## 无 Docker（本地环境）
+
+**无 Docker**：按仓库 `README` / `requirements-npu.txt` 本地安装后，以下在**仓库根**执行（`WORKSPACE` 为 VERL 仓库根）。
+
 ## 镜像规则
 
 - 用户/运维已指定 `IMAGE_TAG`：直接使用

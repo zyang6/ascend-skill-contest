@@ -28,6 +28,7 @@ keywords:
   - 也可在 Quay tags 自选：`https://quay.io/repository/ascend/verl?tab=tags&tag=latest`
 - 修改或新建 `examples/**/run_*.sh` 后，除非用户明确说“只写不跑”，必须执行一次冒烟（至少 `trainer.total_epochs=1 trainer.test_freq=1`），并返回日志绝对路径与 `tail -f` 命令。
 - 使用 **Megatron** 训练后端时，`use_flash_attn=True` 作为默认参数必须开启（至少 actor 侧开启；若 ref 侧未继承则显式补齐）。
+- **NPU 选卡**：用户未设 `ASCEND_RT_VISIBLE_DEVICES` 时，Agent 根据 `npu-smi info` **自动选空闲卡**；不确定或卡不够 → **问用户**。与 `trainer.n_gpus_per_node` / 实际占用卡数一致。
 
 ## 最小输入变量
 
@@ -39,6 +40,7 @@ keywords:
 - `DATA_DIR=$HOME/data/gsm8k`
 - `MODEL_PATH=<绝对路径，且末级目录为具体模型名>`
 - `NGPUS=1`、`NNODES=1`、`LOG=verl_run.log`
+- `ASCEND_RT_VISIBLE_DEVICES`（可选；用户已设时 Agent **不覆盖**，见上条 NPU 选卡规则）
 - `SCRIPT_QUERY`（可选）、`HF_ENDPOINT`（可选）
 
 ## 执行步骤
@@ -59,7 +61,7 @@ sleep 3
 kill -9 <PID>
 ```
 
-1. Step 0: 环境/镜像  
+1. Step 0: 环境/镜像（Docker 与**无 Docker 本地**安装均见该文）  
    参考 `references/docker-ascend.md`
 2. Step 1: 数据处理（生成 parquet）  
    参考 `references/data-preprocess.md`
